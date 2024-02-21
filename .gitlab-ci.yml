@@ -1,0 +1,8 @@
+stages:
+  - deploy
+
+deploy_ubuntu:
+  stage: deploy
+  script:
+    - echo "packer"
+    - packer build -force -debug -on-error=ask -var-file variables.json  packer.json
