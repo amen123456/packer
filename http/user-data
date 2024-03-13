@@ -1,0 +1,54 @@
+#cloud-config
+autoinstall:
+    version: 1
+    early-commands:
+        # Stop ssh for packer
+        - sudo systemctl stop ssh
+    locale: en_US
+    keyboard:
+        layout: en
+        variant: us
+    # general packages needed for machines - referenced from https://tekanaid.com/posts/hashicorp-packer-build-ubuntu20-04-vmware
+    packages: [open-vm-tools, openssh-server, net-tools, perl, open-iscsi, ntp, curl, vim, ifupdown, zip, unzip, gnupg2, software-properties-common, apt-transport-https, ca-certificates, lsb-release, python3-pip, jq]
+    # network setup - referenced from https://tekanaid.com/posts/hashicorp-packer-build-ubuntu20-04-vmware
+    #cloud-config
+write_files:
+  - path: /etc/netplan/01-netcfg.yaml
+    content: |
+      network:
+        version: 2
+        renderer: networkd
+        ethernets:
+          ens160:
+            dhcp4: no
+            addresses:
+              - 10.2.1.6/24
+            gateway4: 10.2.1.254
+            nameservers:
+              addresses: [10.2.1.254, 8.8.8.8]
+runcmd:
+  - netplan apply
+    identity:
+        hostname: amen
+        username: amen
+        password: '$6$rounds=4096$NYG7e8HxIMgz1$BqP28Ppt0FqXiBQuiE6PxiVBJJJAbm8tJrNz4HC7MEC.7Gv/eOyQIfaLqZ6W6fnMMtxP.BYfHmTBxUFQQs0u91'
+    ssh:
+        install-server: yes
+        allow-pw: yes
+        authorized-keys:
+            - 
+    storage:
+        layout:
+            name: lvm
+    apt:
+        primary:
+            - arches: [i386, amd64]
+              uri: "http://archive.ubuntu.com/ubuntu/"
+    user-data:
+      disable_root: false
+    late-commands:
+      - sed -i -e 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /target/etc/ssh/sshd_config
+      - echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu
+      - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/ubuntu
+      - curtin in-target --target=/target -- apt-get update
+      - curtin in-target --target=/target -- apt-get upgrade --yes
