@@ -1,0 +1,21 @@
+{
+  "vm-name": "Ubuntu-2004-Template",
+  "vcenter-server": "vc-vstack-017-lab.virtualstack.tn",
+  "vcenter-username": "abk",
+  "vcenter-password": "+Q#i62XWpbi5_2",
+  "datacenter": "DTX1",
+  "datastore": "ds001-lab-ucs02-svc1-stor3-dtx1",
+  "folder": "./Amen allah Ben Khalifa/Templates",
+  "template": "VM-DevOps", 
+  "cluster": "Clu001-UCS02-PRD",
+  "network": "VLAN_LAB",
+  "Ressource_Pool": "/",
+  "vm-cpu-num": "4",
+  "vm-mem-size": "8192",
+  "vm-disk-size": "25000",
+  "ssh-username": "amen",
+  "ssh-password": "amen",
+  "iso_checksum_type": "sha256",
+  "linked_clone": "true"
+  
+}
