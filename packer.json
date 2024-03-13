@@ -30,12 +30,6 @@
         }
       ]   
     }
-  ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "script": "./script.sh"
-    }
   ]
   
 }
